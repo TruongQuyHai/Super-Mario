@@ -8,6 +8,8 @@ public class SpiderScript : MonoBehaviour
     private Rigidbody2D body;
 
     private Vector3 moveDirection = Vector3.down;
+    public float minY;
+    public float maxY;
 
     private string couroutine_Name = "ChangeMovement";
 
@@ -31,16 +33,24 @@ public class SpiderScript : MonoBehaviour
 
     void MoveSpider()
     {
-        transform.Translate(moveDirection * Time.smoothDeltaTime);
-
+        Vector3 move = moveDirection * Time.smoothDeltaTime;
+        Vector3 pos = transform.position + move;
+        if (pos.y < minY || pos.y > maxY)
+        {
+            move.y = -move.y;
+            moveDirection = pos.y < minY ? Vector3.up : Vector3.down;
+        }
+        transform.Translate(move);
     }
 
     IEnumerator ChangeMovement()
     {
         yield return new WaitForSeconds(Random.Range(2f, 5f));
 
-        if (moveDirection == Vector3.down)
+        if (moveDirection == Vector3.down && transform.localPosition.y <= minY)
+        {
             moveDirection = Vector3.up;
+        }
         else
             moveDirection = Vector3.down;
 
@@ -59,7 +69,7 @@ public class SpiderScript : MonoBehaviour
         {
             anim.Play("SpiderDead");
             body.bodyType = RigidbodyType2D.Dynamic;
+            StartCoroutine(SpiderDead());
         }
-        StartCoroutine(SpiderDead());
     }
 }

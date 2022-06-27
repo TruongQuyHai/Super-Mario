@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BirdScript : MonoBehaviour
 {
+    public float range = 6f;
+
     private Rigidbody2D body;
     private Animator anim;
 
@@ -28,10 +30,10 @@ public class BirdScript : MonoBehaviour
     void Start()
     {
         originPosition = transform.position;
-        originPosition.x += 6f;
+        originPosition.x += range;
 
         movePosition = transform.position;
-        movePosition.x -= 6f;
+        movePosition.x -= range;
 
         canMove = true;
     }
